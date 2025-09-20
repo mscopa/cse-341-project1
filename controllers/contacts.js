@@ -28,7 +28,7 @@ const getSingle = (req, res) => {
       .getDatabase()
       .db('cse341')
       .collection('contacts')
-      .findOne({ _id: contactId })
+      .find({ _id: contactId })
       .toArray((err, result) => {
         if (err) {
             res.status(400).json({ message: err});
