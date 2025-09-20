@@ -1,21 +1,37 @@
 const mongodb = require('../data/database');
 const ObjectId = require('mongodb').ObjectId;
 
-const getAll = async (req, res) => {
+const getAll = (req, res) => {
     //#swagger.tags=['Contacts']
-    const result = await mongodb.getDatabase().db('cse341').collection('contacts').find();
-    result.toArray().then((contacts) => {
+    mongodb
+      .getDatabase()
+      .db('cse341')
+      .collection('contacts')
+      .find()
+      .toArray((err, lists) => {
+        if (err) {
+            res.status(400).json({ message: err});
+        }
         res.setHeader('Content-Type', 'application/json');
-        res.status(200).json(contacts);
-    });
+        res.status(200).json(lists);
+      });
 };
 
-const getSingle = async (req, res) => {
+const getSingle = (req, res) => {
     //#swagger.tags=['Contacts']
     const contactId = new ObjectId(req.params.id);
-    const result = await mongodb.getDatabase().db('cse341').collection('contacts').findOne({ _id: contactId });
-    res.setHeader('Content-Type', 'application/json');
-    res.status(200).json(result);
+    mongodb
+      .getDatabase()
+      .db('cse341')
+      .collection('contacts')
+      .findOne({ _id: contactId })
+      .toArray((err, result) => {
+        if (err) {
+            res.status(400).json({ message: err});
+        }
+        res.setHeader('Content-Type', 'application/json');
+        res.status(200).json(result[0]);
+      });
 };
 
 const createContact = async (req, res) => {
